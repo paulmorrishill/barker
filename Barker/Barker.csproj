@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreatePostResponse.cs" />
+    <Compile Include="CurrentTimeProvider.cs" />
+    <Compile Include="GetAllPostsOperation.cs" />
+    <Compile Include="GetAllPostsResponse.cs" />
+    <Compile Include="Post.cs" />
+    <Compile Include="PostRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
