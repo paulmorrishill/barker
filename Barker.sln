@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barker", "Barker\Barker.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarkerTests", "BarkerTests\BarkerTests.csproj", "{A454B38E-C773-4269-9C4C-D8ACB4EAB99F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterfaceTests", "UserInterfaceTests\UserInterfaceTests.csproj", "{C88B5088-2F58-42F5-B164-A9AAEF19A5D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarkerApi", "BarkerApi\BarkerApi.csproj", "{33F34EA1-7027-46E1-9FC8-4B196EEED1C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{A454B38E-C773-4269-9C4C-D8ACB4EAB99F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A454B38E-C773-4269-9C4C-D8ACB4EAB99F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A454B38E-C773-4269-9C4C-D8ACB4EAB99F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C88B5088-2F58-42F5-B164-A9AAEF19A5D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C88B5088-2F58-42F5-B164-A9AAEF19A5D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C88B5088-2F58-42F5-B164-A9AAEF19A5D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C88B5088-2F58-42F5-B164-A9AAEF19A5D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33F34EA1-7027-46E1-9FC8-4B196EEED1C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33F34EA1-7027-46E1-9FC8-4B196EEED1C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33F34EA1-7027-46E1-9FC8-4B196EEED1C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33F34EA1-7027-46E1-9FC8-4B196EEED1C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

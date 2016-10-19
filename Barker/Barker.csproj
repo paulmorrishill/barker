@@ -45,12 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Posting\FlatFilePostRepository.cs" />
-    <Compile Include="Posting\Operations\CreatePostOperation.cs" />
-    <Compile Include="Posting\Operations\CreatePostResponse.cs" />
+    <Compile Include="Posting\Operations\CreatePost\CreatePostOperation.cs" />
+    <Compile Include="Posting\Operations\CreatePost\CreatePostResponse.cs" />
     <Compile Include="CurrentTimeProvider.cs" />
-    <Compile Include="Posting\Operations\DeletePostOperation.cs" />
-    <Compile Include="Posting\Operations\GetAllPostsOperation.cs" />
-    <Compile Include="Posting\Operations\GetAllPostsResponse.cs" />
+    <Compile Include="Posting\Operations\DeletePost\DeletePostOperation.cs" />
+    <Compile Include="Posting\Operations\GetAllPosts\GetAllPostsOperation.cs" />
+    <Compile Include="Posting\Operations\GetAllPosts\GetAllPostsResponse.cs" />
     <Compile Include="Posting\Post.cs" />
     <Compile Include="Posting\PostRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,6 +59,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
