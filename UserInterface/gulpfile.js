@@ -118,6 +118,7 @@ gulp.task('watch', function () {
 
 gulp.task('serve', function (cb) {
   runSequence('clean:tmp',
+    'styles',
     ['lint:scripts'],
     ['start:client'],
     'watch', cb);
