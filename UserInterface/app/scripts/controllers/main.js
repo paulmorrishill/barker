@@ -12,8 +12,15 @@ angular.module('userInterfaceApp')
     var vm = this;
     vm.posts = [];
     vm.deletePost = deletePost;
+    vm.post = createPost;
 
     loadPosts();
+
+    function createPost(content){
+      $http.post("http://localhost:8080/posts", {
+        content: content
+      }).then(loadPosts);
+    }
 
     function deletePost(id){
       $http.delete("http://localhost:8080/posts/" + id).then(loadPosts);

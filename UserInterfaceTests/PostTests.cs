@@ -63,7 +63,7 @@ namespace UserInterfaceTests
             };
 
             ApiControllerCatalog.Reset();
-            ApiControllerCatalog.AddNancyModule(new PostController(this, this));
+            ApiControllerCatalog.AddNancyModule(new PostController(this, this, this));
             Api = WebApp.Start<ApiStartup>("http://localhost:8080/");
         }
 
@@ -74,7 +74,7 @@ namespace UserInterfaceTests
         }
 
         [Test]
-        public void CanReadTheLatestPosts()
+        public void CanReadTheLatestPostsThroughTheUi()
         {
             NavigateToTheHomePage();
 
@@ -85,7 +85,7 @@ namespace UserInterfaceTests
         }
 
         [Test]
-        public void CanDeleteAPost()
+        public void CanDeleteAPostThroughTheUi()
         {
             NavigateToTheHomePage();
 
@@ -93,6 +93,22 @@ namespace UserInterfaceTests
 
             PageShouldNotShowText(TheFirstPostsContent);
             PageShouldShowText(TheSecondPostContent);
+        }
+
+        [Test]
+        public void CanCreateANewPostThrougTheUserInterface()
+        {
+            NavigateToTheHomePage();
+
+            var theNewPostText = "This is a cool new post";
+
+            WebDriver.FindElementById("post-content").SendKeys(theNewPostText);
+
+            WebDriver.FindElementById("submit-post").Click();
+
+            WaitUntil(() => LastCreatedPost == theNewPostText);
+
+            PageShouldShowText(theNewPostText);
         }
 
         private void PageShouldNotShowText(string text)

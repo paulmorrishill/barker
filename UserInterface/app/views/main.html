@@ -1,8 +1,14 @@
 <div class="home-main-header">
   <div class="input-group input-group-lg">
-    <input type="text" class="form-control" placeholder="What do you want to bark about?">
+    <input type="text"
+           ng-model="vm.newPost"
+           class="form-control"
+           id="post-content"
+           placeholder="What do you want to bark about?">
+
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Bark</button>
+        <button class="btn btn-default" id="submit-post" type="button"
+                ng-click="vm.post(vm.newPost)">Bark</button>
       </span>
   </div><!-- /input-group -->
 </div>
