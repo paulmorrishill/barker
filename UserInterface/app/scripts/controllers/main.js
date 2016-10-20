@@ -8,10 +8,10 @@
  * Controller of the userInterfaceApp
  */
 angular.module('userInterfaceApp')
-  .controller('MainCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('MainCtrl', function ($http) {
+    var vm = this;
+    vm.posts = [];
+    $http.get("http://localhost:8080/posts").then(function(response){
+      vm.posts = response.data;
+    });
   });

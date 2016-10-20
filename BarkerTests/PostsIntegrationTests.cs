@@ -22,9 +22,9 @@ namespace BarkerTests
             var someFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var postStorage = new FlatFilePostRepository(someFile);
 
-            var createPost = new CreatePostOperation(postStorage, new ServerTimeProvider());
-            var deletePost = new DeletePostOperation(postStorage);
-            var getAllPosts = new GetAllPostsOperation(postStorage);
+            var createPost = new CreatePostOperationImpl(postStorage, new ServerTimeProvider());
+            var deletePost = new DeletePostOperationImpl(postStorage);
+            var getAllPosts = new GetAllPostsOperationImpl(postStorage);
 
             createPost.Execute("Just signed up");
             createPost.Execute("this is pretty cool");

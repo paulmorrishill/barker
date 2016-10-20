@@ -15,13 +15,13 @@ namespace BarkerTests
     class DeletePostOperationsTests
     {
         private PostRepository PostRepository;
-        private DeletePostOperation Delete;
+        private DeletePostOperationImpl Delete;
 
         [Test]
         public void CanDeleteAPost()
         {
             PostRepository = Substitute.For<PostRepository>();
-            Delete = new DeletePostOperation(PostRepository);
+            Delete = new DeletePostOperationImpl(PostRepository);
             Delete.Execute("some-id");
 
             PostRepository.Received().DeletePost("some-id");

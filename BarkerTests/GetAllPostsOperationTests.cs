@@ -12,7 +12,7 @@ namespace BarkerTests
 {
     public class GetAllPostsOperationTests
     {
-        private GetAllPostsOperation GetAllPostsOperation;
+        private GetAllPostsOperationImpl GetAllPostsOperationImpl;
         private PostRepository MockPostRepository;
         private DateTime Yesterday;
         private DateTime Today;
@@ -22,7 +22,7 @@ namespace BarkerTests
         public void SetUp()
         {
             MockPostRepository = Substitute.For<PostRepository>();
-            GetAllPostsOperation = new GetAllPostsOperation(MockPostRepository);
+            GetAllPostsOperationImpl = new GetAllPostsOperationImpl(MockPostRepository);
             Yesterday = DateTime.Today.AddHours(-27);
             TheDayBeforeYesterday = DateTime.Today.AddHours(-49);
             Today = DateTime.Now;
@@ -32,7 +32,7 @@ namespace BarkerTests
         public void GivenThereAreNoPosts_ThenItReturnsAnEmptyListOfPosts()
         {
             MockPostRepository.GetAllPosts().Returns(new List<Post>());
-            GetAllPostsOperation.Execute().Posts.Count.ShouldEqual(0);
+            GetAllPostsOperationImpl.Execute().Posts.Count.ShouldEqual(0);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace BarkerTests
                 }
             });
 
-            var posts = GetAllPostsOperation.Execute().Posts;
+            var posts = GetAllPostsOperationImpl.Execute().Posts;
             posts.Count.ShouldEqual(2);
 
             var firstPost = posts[0];
@@ -78,7 +78,7 @@ namespace BarkerTests
                 CreateAPost("3", TheDayBeforeYesterday)
             });
 
-            var posts = GetAllPostsOperation.Execute().Posts;
+            var posts = GetAllPostsOperationImpl.Execute().Posts;
 
             posts[0].Id.ShouldEqual("1");
             posts[1].Id.ShouldEqual("2");

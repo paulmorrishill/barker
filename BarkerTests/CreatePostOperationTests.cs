@@ -10,7 +10,7 @@ namespace BarkerTests
 {
     public class CreatePostOperationTests
     {
-        private CreatePostOperation Create;
+        private CreatePostOperationImpl Create;
         private DateTime CurrentTime;
         private InMemoryPostRepository PostRepository;
 
@@ -23,7 +23,7 @@ namespace BarkerTests
             var mockCurrentTimeProvider = Substitute.For<CurrentTimeProvider>();
             mockCurrentTimeProvider.GetCurrentTime().Returns(CurrentTime);
 
-            Create = new CreatePostOperation(PostRepository, mockCurrentTimeProvider);
+            Create = new CreatePostOperationImpl(PostRepository, mockCurrentTimeProvider);
         }
 
         [Test]

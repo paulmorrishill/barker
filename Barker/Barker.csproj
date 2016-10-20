@@ -46,10 +46,13 @@
   <ItemGroup>
     <Compile Include="Posting\FlatFilePostRepository.cs" />
     <Compile Include="Posting\Operations\CreatePost\CreatePostOperation.cs" />
+    <Compile Include="Posting\Operations\CreatePost\CreatePostOperationImpl.cs" />
     <Compile Include="Posting\Operations\CreatePost\CreatePostResponse.cs" />
     <Compile Include="CurrentTimeProvider.cs" />
     <Compile Include="Posting\Operations\DeletePost\DeletePostOperation.cs" />
+    <Compile Include="Posting\Operations\DeletePost\DeletePostOperationImpl.cs" />
     <Compile Include="Posting\Operations\GetAllPosts\GetAllPostsOperation.cs" />
+    <Compile Include="Posting\Operations\GetAllPosts\GetAllPostsOperationImpl.cs" />
     <Compile Include="Posting\Operations\GetAllPosts\GetAllPostsResponse.cs" />
     <Compile Include="Posting\Post.cs" />
     <Compile Include="Posting\PostRepository.cs" />

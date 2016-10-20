@@ -1,17 +1,7 @@
 ﻿namespace Barker.Posting.Operations.DeletePost
 {
-    public class DeletePostOperation
+    public interface DeletePostOperation
     {
-        private PostRepository PostRepository;
-
-        public DeletePostOperation(PostRepository postRepository)
-        {
-            PostRepository = postRepository;
-        }
-
-        public void Execute(string postId)
-        {
-            PostRepository.DeletePost(postId);
-        }
+        void Execute(string postId);
     }
 }
