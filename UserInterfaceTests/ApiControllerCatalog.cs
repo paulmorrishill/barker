@@ -14,6 +14,12 @@ namespace UserInterfaceTests
             ModulesByType.Add(module.GetType(), module);
         }
 
+        public static void Reset()
+        {
+            Modules.Clear();
+            ModulesByType.Clear();
+        }
+
         public IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             return Modules;

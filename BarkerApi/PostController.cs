@@ -16,9 +16,14 @@ namespace BarkerApi
     public class PostController : NancyModule
     {
 
-        public PostController(GetAllPostsOperation getAll)
+        public PostController(GetAllPostsOperation getAll, DeletePostOperation delete)
         {
             Get["/posts"] = _ => JsonConvert.SerializeObject(getAll.Execute().Posts);
+            Delete["/posts/{id}"] = _ =>
+            {
+                delete.Execute(_.id.ToString());
+                return HttpStatusCode.OK;
+            };
         }
 
     }

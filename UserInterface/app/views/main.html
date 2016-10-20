@@ -9,6 +9,12 @@
 
 <div class="post-list">
   <div class="post" ng-repeat="post in vm.posts">
-    {{post.Content}}
+    {{post.Content}} {{post.DateMade | timeAgo}}
+
+    <button class="btn btn-danger"
+            id="delete-post-{{post.Id}}"
+            ng-click="vm.deletePost(post.Id)">
+      Delete
+    </button>
   </div>
 </div>

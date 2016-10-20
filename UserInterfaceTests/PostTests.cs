@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Barker.Posting.Operations.CreatePost;
+using Barker.Posting.Operations.DeletePost;
 using Barker.Posting.Operations.GetAllPosts;
 using BarkerApi;
 using Microsoft.Owin.Hosting;
@@ -18,16 +20,21 @@ using BarkerApi = BarkerApi.PostController;
 
 namespace UserInterfaceTests
 {
-    public class PostTests
+    public class PostTests : GetAllPostsOperation, DeletePostOperation, CreatePostOperation
     {
         private const string TheFirstPostsContent = "Post 1 content";
         private static ChromeDriver WebDriver;
         private IDisposable Api;
+        private List<GetAllPostsResponse.Post> CurrentPosts;
+        private string LastCreatedPost;
+        private const string TheSecondPostContent = "This is another post";
+        private const string TheFirstPostId = "post1";
 
         [OneTimeSetUp]
         public static void SetUpOnceForAllTests()
         {
             WebDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService());
+            WebDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(3));
         }
 
         [OneTimeTearDown]
@@ -40,19 +47,23 @@ namespace UserInterfaceTests
         [SetUp]
         public void SetUp()
         {
-            var getAll = Substitute.For<GetAllPostsOperation>();
-            getAll.Execute().Returns(new GetAllPostsResponse
+            CurrentPosts = new List<GetAllPostsResponse.Post>
             {
-                Posts = new List<GetAllPostsResponse.Post>
+                new GetAllPostsResponse.Post
                 {
-                    new GetAllPostsResponse.Post
-                    {
-                        Content = TheFirstPostsContent
-                    }
+                    Content = TheFirstPostsContent,
+                    DateMade = DateTime.Now.AddMinutes(-5),
+                    Id = TheFirstPostId
+                },
+                new GetAllPostsResponse.Post
+                {
+                    Content = TheSecondPostContent,
+                    DateMade = DateTime.Now.AddMinutes(-60)
                 }
-            });
+            };
 
-            ApiControllerCatalog.AddNancyModule(new PostController(getAll));
+            ApiControllerCatalog.Reset();
+            ApiControllerCatalog.AddNancyModule(new PostController(this, this));
             Api = WebApp.Start<ApiStartup>("http://localhost:8080/");
         }
 
@@ -65,13 +76,43 @@ namespace UserInterfaceTests
         [Test]
         public void CanReadTheLatestPosts()
         {
-            WebDriver.Navigate().GoToUrl("http://localhost:9000/");
+            NavigateToTheHomePage();
+
             PageShouldShowText(TheFirstPostsContent);
+            PageShouldShowText("5 minutes ago");
+            PageShouldShowText(TheSecondPostContent);
+            PageShouldShowText("an hour ago");
+        }
+
+        [Test]
+        public void CanDeleteAPost()
+        {
+            NavigateToTheHomePage();
+
+            WebDriver.FindElementById("delete-post-" + TheFirstPostId).Click();
+
+            PageShouldNotShowText(TheFirstPostsContent);
+            PageShouldShowText(TheSecondPostContent);
+        }
+
+        private void PageShouldNotShowText(string text)
+        {
+            WaitUntil(() => GetNumberOfElementsOnPageWithText(text) == 0);
+        }
+
+        private static int GetNumberOfElementsOnPageWithText(string text)
+        {
+            return WebDriver.FindElements(By.XPath($"//*[contains(text(), '{text}')]")).Count;
+        }
+
+        private static void NavigateToTheHomePage()
+        {
+            WebDriver.Navigate().GoToUrl("http://localhost:9000/");
         }
 
         private static void PageShouldShowText(string text)
         {
-            WaitUntil(() => WebDriver.FindElements(By.XPath($"//*[contains(text(), '{text}')]")).Count > 0);
+            WaitUntil(() => GetNumberOfElementsOnPageWithText(text) > 0);
         }
 
         private static void WaitUntil(Func<bool> thingToBecomeTrue, int timeout = 2000)
@@ -83,6 +124,34 @@ namespace UserInterfaceTests
                 if(durationWaited.TotalMilliseconds > timeout) throw new Exception("Took too long to become true.");
                 Thread.Sleep(200);
             }
+        }
+
+        public GetAllPostsResponse Execute()
+        {
+            return new GetAllPostsResponse
+            {
+                Posts = CurrentPosts
+            };
+        }
+
+        void DeletePostOperation.Execute(string postId)
+        {
+            CurrentPosts = CurrentPosts.Where(post => post.Id != postId).ToList();
+        }
+
+        CreatePostResponse CreatePostOperation.Execute(string content)
+        {
+            LastCreatedPost = content;
+            CurrentPosts.Add(new GetAllPostsResponse.Post
+            {
+                Content = content,
+                DateMade = DateTime.Now,
+                Id = "SOMEID"
+            });
+            return new CreatePostResponse
+            {
+                Successful = true
+            };
         }
     }
 }

@@ -17,16 +17,14 @@ var yeoman = {
 var paths = {
   scripts: [yeoman.app + '/scripts/**/*.js'],
   styles: [yeoman.app + '/styles/**/*.scss'],
-  test: ['test/spec/**/*.js'],
+  test: ['scripts/**/*.spec.js'],
   testRequire: [
-    yeoman.app + '/bower_components/angular/angular.js',
-    yeoman.app + '/bower_components/angular-mocks/angular-mocks.js',
-    yeoman.app + '/bower_components/angular-resource/angular-resource.js',
-    yeoman.app + '/bower_components/angular-cookies/angular-cookies.js',
-    yeoman.app + '/bower_components/angular-sanitize/angular-sanitize.js',
-    yeoman.app + '/bower_components/angular-route/angular-route.js',
-    'test/mock/**/*.js',
-    'test/spec/**/*.js'
+    '/bower_components/angular/angular.js',
+    '/bower_components/angular-mocks/angular-mocks.js',
+    '/bower_components/angular-resource/angular-resource.js',
+    '/bower_components/angular-cookies/angular-cookies.js',
+    '/bower_components/angular-sanitize/angular-sanitize.js',
+    '/bower_components/angular-route/angular-route.js'
   ],
   karma: 'karma.conf.js',
   views: {
@@ -133,10 +131,9 @@ gulp.task('serve:prod', function() {
 });
 
 gulp.task('test', ['start:server:test'], function () {
-  var testToFiles = paths.testRequire.concat(paths.scripts, paths.test);
-  return gulp.src(testToFiles)
+  return gulp.src([])
     .pipe($.karma({
-      configFile: paths.karma,
+      configFile: 'test/karma.conf.js',
       action: 'watch'
     }));
 });
