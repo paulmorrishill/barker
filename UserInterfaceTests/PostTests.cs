@@ -32,7 +32,8 @@ namespace UserInterfaceTests
         private const string TheSecondPostContent = "This is another post";
         private const string TheFirstPostId = "post1";
         private const string PleaseProvideSomethingToBarkErrorMessage = "Please provide something to bark!";
-        private const string PostTooLongErrorMessage = "Pleast keep your barks under 150 characters.";
+        private const string PostTooLongErrorMessage = "Please keep your barks under 150 characters.";
+        private const string PostSuccessMessage = "Congratulations";
         private int NumberOfCreateRequestsRecieved;
 
         [OneTimeSetUp]
@@ -114,6 +115,7 @@ namespace UserInterfaceTests
             WaitUntil(() => LastCreatedPost == theNewPostText);
             PageShouldShowText(theNewPostText);
             AssertThePostTextBoxIsEmpty();
+            PageShouldShowText(PostSuccessMessage);
         }
 
         [Test]
@@ -165,6 +167,7 @@ namespace UserInterfaceTests
             NextCreatePostResponse.ErrorPostContentEmpty = true;
             TryToSubmitPost("");
             PageShouldShowText(PleaseProvideSomethingToBarkErrorMessage);
+            PageShouldNotShowText(PostSuccessMessage);
         }
 
         [Test]
@@ -175,6 +178,27 @@ namespace UserInterfaceTests
             PageShouldShowText(PleaseProvideSomethingToBarkErrorMessage);
             SetThePostTextBoxContentTo("a");
             PageShouldNotShowText(PleaseProvideSomethingToBarkErrorMessage);
+        }
+
+        [Test]
+        public void ItHidesThePreviousSuccessMessageWhenTheUserStartsTypingInThePostBox()
+        {
+            NextCreatePostResponse.Successful = true;
+            TryToSubmitPost("test");
+            PageShouldShowText(PostSuccessMessage);
+            SetThePostTextBoxContentTo("t");
+            PageShouldNotShowText(PostSuccessMessage);
+        }
+
+        [Test]
+        public void ItHidesThePreviousSuccessMessageWhenTheUserClicksPostWithoutTypingInTheBox()
+        {
+            NextCreatePostResponse.Successful = true;
+            TryToSubmitPost("test");
+            PageShouldShowText(PostSuccessMessage);
+            NextCreatePostResponse.Successful = false;
+            ClickTheSubmitPostButton();
+            PageShouldNotShowText(PostSuccessMessage);
         }
 
         private void SuspendRespondingToCreateRequests()
@@ -212,7 +236,7 @@ namespace UserInterfaceTests
 
         private void PageShouldNotShowText(string text)
         {
-            WaitUntil(() => GetNumberOfElementsOnPageWithText(text) == 0);
+            WaitUntil(() => GetNumberOfElementsOnPageWithText(text) == 0, $"Found {text} on the page.");
         }
 
         private static int GetNumberOfElementsOnPageWithText(string text)
@@ -227,16 +251,16 @@ namespace UserInterfaceTests
 
         private static void PageShouldShowText(string text)
         {
-            WaitUntil(() => GetNumberOfElementsOnPageWithText(text) > 0);
+            WaitUntil(() => GetNumberOfElementsOnPageWithText(text) > 0, $"Could not find text {text} on the page.");
         }
 
-        private static void WaitUntil(Func<bool> thingToBecomeTrue, int timeout = 2000)
+        private static void WaitUntil(Func<bool> thingToBecomeTrue, string message = "Took too long to become true.", int timeout = 2000)
         {
             var start = DateTime.Now;
             while (!thingToBecomeTrue())
             {
                 var durationWaited = DateTime.Now - start;
-                if(durationWaited.TotalMilliseconds > timeout) throw new Exception("Took too long to become true.");
+                if(durationWaited.TotalMilliseconds > timeout) throw new ApplicationException(message);
                 Thread.Sleep(200);
             }
         }
