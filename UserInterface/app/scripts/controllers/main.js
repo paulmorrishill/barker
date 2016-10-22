@@ -19,6 +19,7 @@ angular.module('userInterfaceApp')
     loadPosts();
 
     function createPost(content){
+      vm.messageWasDeleted = false;
       if(vm.creatingPost) return;
       vm.creatingPost = true;
       $http.post("http://localhost:8080/posts", {
@@ -36,10 +37,17 @@ angular.module('userInterfaceApp')
 
     function barkBoxKeyPressed(){
       vm.lastResponse = null;
+      vm.messageWasDeleted = false;
+    }
+
+    function showDeleteSuccessMessage(){
+      vm.messageWasDeleted = true;
     }
 
     function deletePost(id){
-      $http.delete("http://localhost:8080/posts/" + id).then(loadPosts);
+      $http.delete("http://localhost:8080/posts/" + id)
+        .then(showDeleteSuccessMessage)
+        .then(loadPosts);
     }
 
     function loadPosts(){

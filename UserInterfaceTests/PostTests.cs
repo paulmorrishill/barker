@@ -34,6 +34,7 @@ namespace UserInterfaceTests
         private const string PleaseProvideSomethingToBarkErrorMessage = "Please provide something to bark!";
         private const string PostTooLongErrorMessage = "Please keep your barks under 150 characters.";
         private const string PostSuccessMessage = "Congratulations";
+        private const string PostDeletedMessage = "Your bark was deleted.";
         private int NumberOfCreateRequestsRecieved;
 
         [OneTimeSetUp]
@@ -99,10 +100,26 @@ namespace UserInterfaceTests
         {
             NavigateToTheHomePage();
 
-            WebDriver.FindElementById("delete-post-" + TheFirstPostId).Click();
+            DeleteTheFirstPost();
 
             PageShouldNotShowText(TheFirstPostsContent);
             PageShouldShowText(TheSecondPostContent);
+            PageShouldShowText(PostDeletedMessage);
+        }
+
+        private static void DeleteTheFirstPost()
+        {
+            WebDriver.FindElementById("delete-post-" + TheFirstPostId).Click();
+        }
+
+        [Test]
+        public void AfterDeletingAPostTheSuccessMessageDissapearsWhenTheUserTypesInThePostBox()
+        {
+            NavigateToTheHomePage();
+            DeleteTheFirstPost();
+            PageShouldShowText(PostDeletedMessage);
+            SetThePostTextBoxContentTo("a");
+            PageShouldNotShowText(PostDeletedMessage);
         }
 
         [Test]
@@ -188,6 +205,17 @@ namespace UserInterfaceTests
             PageShouldShowText(PostSuccessMessage);
             SetThePostTextBoxContentTo("t");
             PageShouldNotShowText(PostSuccessMessage);
+        }
+
+        [Test]
+        public void ItHidesThePreviousPostDeletedMessageWhenTheUserStartsTypingInThePostBox()
+        {
+            NavigateToTheHomePage();
+            NextCreatePostResponse.Successful = true;
+            DeleteTheFirstPost();
+            PageShouldShowText(PostDeletedMessage);
+            ClickTheSubmitPostButton();
+            PageShouldNotShowText(PostDeletedMessage);
         }
 
         [Test]
