@@ -13,13 +13,29 @@ angular.module('userInterfaceApp')
     vm.posts = [];
     vm.deletePost = deletePost;
     vm.post = createPost;
+    vm.barkBoxKeyPressed = barkBoxKeyPressed;
+    vm.creatingPost = false;
 
     loadPosts();
 
     function createPost(content){
+      if(vm.creatingPost) return;
+      vm.creatingPost = true;
       $http.post("http://localhost:8080/posts", {
         content: content
-      }).then(loadPosts);
+      }).then(handleCreatePostResponse);
+    }
+
+    function handleCreatePostResponse(response){
+      vm.creatingPost = false;
+      vm.lastResponse = response.data;
+      if(!vm.lastResponse.Successful) return;
+      vm.newPost = "";
+      loadPosts();
+    }
+
+    function barkBoxKeyPressed(){
+      vm.lastResponse = null;
     }
 
     function deletePost(id){

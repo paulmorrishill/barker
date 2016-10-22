@@ -27,8 +27,13 @@ namespace UserInterfaceTests
         private IDisposable Api;
         private List<GetAllPostsResponse.Post> CurrentPosts;
         private string LastCreatedPost;
+        private CreatePostResponse NextCreatePostResponse;
+        private bool RespondingToCreateRequestsIsSuspended;
         private const string TheSecondPostContent = "This is another post";
         private const string TheFirstPostId = "post1";
+        private const string PleaseProvideSomethingToBarkErrorMessage = "Please provide something to bark!";
+        private const string PostTooLongErrorMessage = "Pleast keep your barks under 150 characters.";
+        private int NumberOfCreateRequestsRecieved;
 
         [OneTimeSetUp]
         public static void SetUpOnceForAllTests()
@@ -47,6 +52,9 @@ namespace UserInterfaceTests
         [SetUp]
         public void SetUp()
         {
+            RespondingToCreateRequestsIsSuspended = false;
+            NumberOfCreateRequestsRecieved = 0;
+
             CurrentPosts = new List<GetAllPostsResponse.Post>
             {
                 new GetAllPostsResponse.Post
@@ -61,9 +69,10 @@ namespace UserInterfaceTests
                     DateMade = DateTime.Now.AddMinutes(-60)
                 }
             };
+            NextCreatePostResponse = new CreatePostResponse();
 
             ApiControllerCatalog.Reset();
-            ApiControllerCatalog.AddNancyModule(new PostController(this, this, this));
+            ApiControllerCatalog.AddController(new PostController(this, this, this));
             Api = WebApp.Start<ApiStartup>("http://localhost:8080/");
         }
 
@@ -96,19 +105,109 @@ namespace UserInterfaceTests
         }
 
         [Test]
-        public void CanCreateANewPostThrougTheUserInterface()
+        public void CanCreateANewPostThroughTheUserInterface()
         {
-            NavigateToTheHomePage();
-
             var theNewPostText = "This is a cool new post";
-
-            WebDriver.FindElementById("post-content").SendKeys(theNewPostText);
-
-            WebDriver.FindElementById("submit-post").Click();
+            TryToSubmitPost(theNewPostText);
+            NextCreatePostResponse.Successful = true;
 
             WaitUntil(() => LastCreatedPost == theNewPostText);
-
             PageShouldShowText(theNewPostText);
+            AssertThePostTextBoxIsEmpty();
+        }
+
+        [Test]
+        public void DoesNotAttemptToCreateThePostLoadsOfTimesIfTheUserClicksTheButtonLoadsOfTimes()
+        {
+            SuspendRespondingToCreateRequests();
+            TryToSubmitPost("this is a post here");
+            ClickTheSubmitPostButton();
+            ClickTheSubmitPostButton();
+            ResumeRespondingToCreateRequests();
+            Thread.Sleep(1000);
+            NumberOfCreateRequestsRecieved.ShouldEqual(1);
+        }
+
+        [Test]
+        public void CanPostMultipleSequentialPosts()
+        {
+            NextCreatePostResponse.Successful = true;
+            TryToSubmitPost("this is a post here");
+
+            WaitUntil(() => NumberOfCreateRequestsRecieved == 1);
+
+            SetThePostTextBoxContentTo("this is the second post");
+            ClickTheSubmitPostButton();
+
+            WaitUntil(() => NumberOfCreateRequestsRecieved == 2);
+        }
+
+        [Test]
+        public void CanCreateAPostWithThatIncludesALineFeed()
+        {
+            var contentWithLineFeed = "some post\r\noh look here we are";
+            NextCreatePostResponse.Successful = true;
+            TryToSubmitPost(contentWithLineFeed);
+            PageShouldNotShowText(contentWithLineFeed);
+        }
+
+        [Test]
+        public void ShowsAMessageIfThePostContentIsTooLong()
+        {
+            NextCreatePostResponse.ErrorPostContentTooLong = true;
+            TryToSubmitPost("message");
+            PageShouldShowText(PostTooLongErrorMessage);
+        }
+
+        [Test]
+        public void ItShowsAnErrorMessageWhenTheUserProvidesAnEmptyPost()
+        {
+            NextCreatePostResponse.ErrorPostContentEmpty = true;
+            TryToSubmitPost("");
+            PageShouldShowText(PleaseProvideSomethingToBarkErrorMessage);
+        }
+
+        [Test]
+        public void ItHidesThePreviousErrorWhenTheUserStartsTypingInThePostBox()
+        {
+            NextCreatePostResponse.ErrorPostContentEmpty = true;
+            TryToSubmitPost("");
+            PageShouldShowText(PleaseProvideSomethingToBarkErrorMessage);
+            SetThePostTextBoxContentTo("a");
+            PageShouldNotShowText(PleaseProvideSomethingToBarkErrorMessage);
+        }
+
+        private void SuspendRespondingToCreateRequests()
+        {
+            RespondingToCreateRequestsIsSuspended = true;
+        }
+
+        private void ResumeRespondingToCreateRequests()
+        {
+            RespondingToCreateRequestsIsSuspended = false;
+            Thread.Sleep(100);
+        }
+
+        private static void TryToSubmitPost(string theNewPostText)
+        {
+            NavigateToTheHomePage();
+            SetThePostTextBoxContentTo(theNewPostText);
+            ClickTheSubmitPostButton();
+        }
+
+        private static void ClickTheSubmitPostButton()
+        {
+            WebDriver.FindElementById("submit-post").Click();
+        }
+
+        private static void SetThePostTextBoxContentTo(string theNewPostText)
+        {
+            WebDriver.FindElementById("post-content").SendKeys(theNewPostText);
+        }
+
+        private static void AssertThePostTextBoxIsEmpty()
+        {
+            WebDriver.FindElementById("post-content").GetAttribute("value").ShouldBeEmpty();
         }
 
         private void PageShouldNotShowText(string text)
@@ -157,17 +256,17 @@ namespace UserInterfaceTests
 
         CreatePostResponse CreatePostOperation.Execute(string content)
         {
+            while(RespondingToCreateRequestsIsSuspended) Thread.Sleep(10);
             LastCreatedPost = content;
+            NumberOfCreateRequestsRecieved++;
+
             CurrentPosts.Add(new GetAllPostsResponse.Post
             {
                 Content = content,
                 DateMade = DateTime.Now,
                 Id = "SOMEID"
             });
-            return new CreatePostResponse
-            {
-                Successful = true
-            };
+            return NextCreatePostResponse;
         }
     }
 }

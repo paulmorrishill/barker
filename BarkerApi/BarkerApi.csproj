@@ -56,7 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllerCatalog.cs" />
     <Compile Include="ApiStartup.cs" />
+    <Compile Include="CorsBootStrapper.cs" />
     <Compile Include="PostController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

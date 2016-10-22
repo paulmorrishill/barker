@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Nancy;
 
-namespace UserInterfaceTests
+namespace BarkerApi
 {
     public class ApiControllerCatalog : INancyModuleCatalog
     {
         static List<INancyModule> Modules = new List<INancyModule>();
         static Dictionary<Type, INancyModule> ModulesByType = new Dictionary<Type, INancyModule>();
-        public static void AddNancyModule(INancyModule module)
+        public static void AddController(INancyModule module)
         {
             Modules.Add(module);
             ModulesByType.Add(module.GetType(), module);

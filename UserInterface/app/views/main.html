@@ -1,23 +1,40 @@
 <div class="home-main-header">
-  <div class="input-group input-group-lg">
-    <input type="text"
-           ng-model="vm.newPost"
-           class="form-control"
-           id="post-content"
-           placeholder="What do you want to bark about?">
+  <div class="alert alert-danger" role="alert" ng-if="vm.lastResponse && !vm.lastResponse.Successful">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    <span ng-if="vm.lastResponse.ErrorPostContentEmpty">Please provide something to bark!</span>
+    <span ng-if="vm.lastResponse.ErrorPostContentTooLong">Pleast keep your barks under 150 characters.</span>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="">
+        <textarea ng-model="vm.newPost"
+                  class="form-control"
+                  id="post-content"
+                  ng-keypress="vm.barkBoxKeyPressed()"
+                  placeholder="What do you want to bark about?">
+        </textarea>
+      </div>
+    </div>
 
-      <span class="input-group-btn">
-        <button class="btn btn-default" id="submit-post" type="button"
-                ng-click="vm.post(vm.newPost)">Bark</button>
-      </span>
-  </div><!-- /input-group -->
+    <div class="row">
+        <div class="col-xs-2 col-xs-offset-10">
+          <button class="btn btn-default pull-right post-button" id="submit-post" type="button"
+                  ng-click="vm.post(vm.newPost)">
+            Bark
+          </button>
+        </div>
+    </div>
+
 </div>
 
 <div class="post-list">
-  <div class="post" ng-repeat="post in vm.posts">
-    {{post.Content}} {{post.DateMade | timeAgo}}
+  <div class="panel panel-default" ng-repeat="post in vm.posts">
+    <div class="panel-body post-text">
+      {{post.Content}}
+      <span class="pull-right">{{post.DateMade | timeAgo}}</span>
+    </div>
 
-    <button class="btn btn-danger"
+    <button class="btn btn-danger pull-right"
             id="delete-post-{{post.Id}}"
             ng-click="vm.deletePost(post.Id)">
       Delete

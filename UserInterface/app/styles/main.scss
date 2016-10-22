@@ -9,10 +9,13 @@
 }
 
 body {
-  padding: 0;
+  padding-top: 15px;
 }
 
-.home-main-header {
-  padding: 40px 15px;
-  text-align: center;
+.post-text {
+  white-space: pre;
+}
+
+.post-button {
+  margin: 10px;
 }

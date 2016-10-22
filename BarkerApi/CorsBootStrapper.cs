@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 
-namespace UserInterfaceTests
+namespace BarkerApi
 {
-    public class UserInterfaceTestNancyBootStrapper : DefaultNancyBootstrapper
+    public class CorsBootStrapper : DefaultNancyBootstrapper
     {
         public static bool Initialised = false;
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
