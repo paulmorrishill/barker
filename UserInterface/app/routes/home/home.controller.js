@@ -8,7 +8,7 @@
  * Controller of the userInterfaceApp
  */
 angular.module('userInterfaceApp')
-  .controller('MainCtrl', function ($http) {
+  .controller('HomeCtrl', function ($http) {
     var vm = this;
     vm.posts = [];
     vm.deletePost = deletePost;
