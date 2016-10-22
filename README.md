@@ -6,7 +6,7 @@ Have you ever wanted to share your thoughts online and feel like people are read
 
 You will need an IDE capable of doing work on .Net projects. You can use [visual studio community addition](https://www.visualstudio.com/vs/community/). Or if you feel confident enough you can also use [Jetbrains Project Rider EAP 1.0](https://www.jetbrains.com/rider/) which is pretty nice.
 
-For UI work you'll need some sort of decent javascript IDE like jetbrains Webstorm/IntelliJ. Or you can use a plain text editor if you are bit mental.
+For UI work you'll need some sort of decent javascript IDE like jetbrains Webstorm/IntelliJ. Or you can use a plain text editor if you are a bit mental.
 
 # Basic structure
 
@@ -28,7 +28,7 @@ The UI+API is tested using Selenium, this allows for extremely fast test suites 
 # Running tests
 
 Before doing any dev work you should run all the tests to make sure you environment is set up correctly. 
-All dev work should be be tested, preferably using TDD.
+All dev work should be tested, preferably using TDD.
 
 ## .Net unit tests and UI tests
 
