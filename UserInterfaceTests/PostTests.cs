@@ -200,10 +200,19 @@ namespace UserInterfaceTests
         [Test]
         public void ItHidesThePreviousSuccessMessageWhenTheUserStartsTypingInThePostBox()
         {
-            NextCreatePostResponse.Successful = true;
-            TryToSubmitPost("test");
+            SuccessfullyPostANewPost();
             PageShouldShowText(PostSuccessMessage);
             SetThePostTextBoxContentTo("t");
+            PageShouldNotShowText(PostSuccessMessage);
+        }
+
+        [Test]
+        public void ItHidesThePreviousSuccessMessageWhenTheUserClicksDelete()
+        {
+            SuccessfullyPostANewPost();
+            PageShouldShowText(PostSuccessMessage);
+            DeleteTheFirstPost();
+            PageShouldShowText(PostDeletedMessage);
             PageShouldNotShowText(PostSuccessMessage);
         }
 
@@ -227,6 +236,12 @@ namespace UserInterfaceTests
             NextCreatePostResponse.Successful = false;
             ClickTheSubmitPostButton();
             PageShouldNotShowText(PostSuccessMessage);
+        }
+
+        private void SuccessfullyPostANewPost()
+        {
+            NextCreatePostResponse.Successful = true;
+            TryToSubmitPost("test");
         }
 
         private void SuspendRespondingToCreateRequests()

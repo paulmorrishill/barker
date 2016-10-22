@@ -45,6 +45,7 @@ angular.module('userInterfaceApp')
     }
 
     function deletePost(id){
+      vm.lastResponse = null;
       $http.delete("http://localhost:8080/posts/" + id)
         .then(showDeleteSuccessMessage)
         .then(loadPosts);
