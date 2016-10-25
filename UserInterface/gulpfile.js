@@ -130,12 +130,12 @@ gulp.task('serve:prod', function() {
   });
 });
 
-gulp.task('test', ['start:server:test'], function () {
-  return gulp.src([])
-    .pipe($.karma({
-      configFile: 'test/karma.conf.js',
-      action: 'watch'
-    }));
+gulp.task('test', ['start:server:test'], function (done) {
+  var Server = require('karma').Server;
+  new Server({
+    configFile: require('path').resolve('test/karma.conf.js'),
+    action: 'watch'
+  }, done).start();
 });
 
 // inject bower components
