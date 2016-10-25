@@ -22,8 +22,9 @@ The UI+API is tested using Selenium, this allows for extremely fast test suites 
 
 - Clone the git repo
 - Open a command prompt and cd into UserInterface
+- Run ```npm install -g bower```
 - Run ```npm install``` and ```bower install```
-- Run ```npm install -g grunt```
+- Run ```npm install -g gulp```
 
 # Running tests
 
@@ -32,20 +33,20 @@ All dev work should be tested, preferably using TDD.
 
 ## .Net unit tests and UI tests
 
-- Run ```grunt serve``` from the UserInterface directory. This will serve the UI for the UI tests.
+- Run ```gulp serve``` from the UserInterface directory. This will serve the UI for the UI tests.
 - Open the main solution file your .net IDE of choice.
 - Build the solution
 - Run all tests
 
 ## UI Unit tests
 
-- Run ```grunt test``` from the command line inside the UserInterface directory 
+- Run ```gulp test``` from the command line inside the UserInterface directory 
 
 # Running in "production"
 
 - Open your .Net IDE
 - Set the ConsoleServer project as your startup project
 - Run the console server
-- Run ```grunt serve``` from the UserInterface directory.
+- Run ```gulp serve``` from the UserInterface directory.
 - Navigate to http://localhost:9000
 
